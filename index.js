@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const cors = require("cors")
+const cookieParser = require('cookie-parser')
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts")
@@ -15,9 +17,14 @@ mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true}, ()=>{
 });//set mongo url from env
 
 //middlewares
-app.use(express.json());
+app.use(express.json());//use response as json
 app.use(helmet());
 app.use(morgan("common"));
+app.use(cookieParser())
+app.use(cors({
+    credentials : true,
+    origin:['http://localhost:8800','http://localhost:8080']
+}))
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
